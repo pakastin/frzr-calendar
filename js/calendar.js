@@ -62,7 +62,7 @@ export class Calendar {
     };
   }
   update (year, month, fixMonday) {
-    const date = new Date(year, month);
+    const date = new Date(year || new Date().getFullYear(), month || new Date().getMonth());
 
     this.state = {
       year: date.getFullYear(),
@@ -73,6 +73,6 @@ export class Calendar {
     fixMonday ? this.weekdays.update(WEEKDAYS.slice(1).concat(WEEKDAYS[0])) : this.weekdays.update(WEEKDAYS);
     this.monthName.textContent = MONTHS[this.state.month];
     this.year.textContent = this.state.year;
-    this.weeks.update(createCalendar(year, month, fixMonday));
+    this.weeks.update(createCalendar(this.state.year, this.state.month, fixMonday));
   }
 }
