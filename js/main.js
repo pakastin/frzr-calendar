@@ -315,7 +315,7 @@
 	    };
 	  };
 	  Calendar.prototype.update = function update (year, month, fixMonday) {
-	    var date = new Date(year, month);
+	    var date = new Date(year || new Date().getFullYear(), month || new Date().getMonth());
 
 	    this.state = {
 	      year: date.getFullYear(),
@@ -326,14 +326,14 @@
 	    fixMonday ? this.weekdays.update(WEEKDAYS.slice(1).concat(WEEKDAYS[0])) : this.weekdays.update(WEEKDAYS);
 	    this.monthName.textContent = MONTHS[this.state.month];
 	    this.year.textContent = this.state.year;
-	    this.weeks.update(createCalendar(year, month, fixMonday));
+	    this.weeks.update(createCalendar(this.state.year, this.state.month, fixMonday));
 	  };
 
 	var calendar = new Calendar();
-	calendar.update(2016, 1);
+	calendar.update();
 
 	var calendar2 = new Calendar();
-	calendar2.update(2016, 1, true);
+	calendar2.update(null, null, true);
 
 	mount(document.body, calendar);
 	mount(document.body, calendar2);
