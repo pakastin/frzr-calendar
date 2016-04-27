@@ -1,0 +1,33 @@
+{
+  "name": "frzr-calendar",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node watch",
+    "deploy": "gh-pages -d public",
+
+    "build-css": "stylus -u nib css/index.styl -c -o public/css/main.css",
+    "build-js": "rollup -c -f iife js/index.js | buble > public/js/main.js",
+    "uglify-js": "uglifyjs public/js/main.js -cmo public/js/main.min.js",
+
+    "watch-css": "chokidar 'css/**/*.styl' -c 'npm run build-css'",
+    "watch-js": "chokidar 'js/**/*.js' -c 'npm run build-js'",
+    "watch-uglify-js": "chokidar 'public/js/main.js' -c 'npm run uglify-js'"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "~4.13.4"
+  },
+  "devDependencies": {
+    "buble": "~0.6.2",
+    "frzr": "~0.15.1",
+    "gh-pages": "~0.11.0",
+    "nib": "~1.1.0",
+    "rollup": "~0.26.0",
+    "rollup-plugin-node-resolve": "~1.5.0",
+    "stylus": "~0.54.3",
+    "uglify-js": "~2.6.2"
+  }
+}
