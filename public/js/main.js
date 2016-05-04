@@ -133,12 +133,12 @@
 	    } else {
 	      parentEl.appendChild(childEl);
 	    }
-	    
+
 	    if (child.el !== child) {
 	      child.parent = parent;
 	    }
 
-	  } else if (isPrimitive(childEl)) {
+	  } else if (typeof childEl === 'string' || typeof childEl === 'number') {
 	    mount(parentEl, document.createTextNode(childEl), before);
 
 	  } else if (childEl instanceof Array) {
@@ -165,10 +165,6 @@
 	  if (childEl !== child) {
 	    child.parent = null;
 	  }
-	}
-
-	function isPrimitive (check) {
-	  return typeof check === 'string' || check === 'number' || check === 'boolean';
 	}
 
 	function setChildren (parent, children) {
@@ -264,70 +260,70 @@
 	var MONTHS = 'January February March April May June July August September October November December'.split(' ');
 
 	var Weekday = function Weekday () {
-	    this.el = el('td');
-	  };
-	  Weekday.prototype.update = function update (data) {
-	    this.el.textContent = data;
-	  };
+	  this.el = el('td');
+	};
+	Weekday.prototype.update = function update (data) {
+	  this.el.textContent = data;
+	};
 
 	var Day = function Day () {
-	    this.el = el('td');
-	  };
-	  Day.prototype.update = function update (data) {
-	    this.el.className = 'day' + (data.before ? ' before' : data.after ? ' after' : '');
-	    this.el.textContent = data.date.getDate();
-	  };
+	  this.el = el('td');
+	};
+	Day.prototype.update = function update (data) {
+	  this.el.className = 'day' + (data.before ? ' before' : data.after ? ' after' : '');
+	  this.el.textContent = data.date.getDate();
+	};
 
 	var Week = function Week () {
-	    this.el = el('tr',
-	      this.days = new List(Day)
-	    );
-	  };
-	  Week.prototype.update = function update (data) {
-	    this.days.update(data);
-	  };
+	  this.el = el('tr',
+	    this.days = new List(Day)
+	  );
+	};
+	Week.prototype.update = function update (data) {
+	  this.days.update(data);
+	};
 
 	var Calendar = function Calendar () {
-	    var this$1 = this;
+	  var this$1 = this;
 
 	    this.el = el('div', { class: 'calendar' },
-	      this.month = el('p', { class: 'month' },
-	        this.previousMonth = el('a', { class: 'previous' }, '←'),
-	        this.monthName = text(''),
-	        ' ',
-	        this.year = text(''),
-	        this.nextMonth = el('a', { class: 'next' }, '→')
+	    this.month = el('p', { class: 'month' },
+	      this.previousMonth = el('a', { class: 'previous' }, '←'),
+	      this.monthName = text(''),
+	      ' ',
+	      this.year = text(''),
+	      this.nextMonth = el('a', { class: 'next' }, '→')
+	    ),
+	    this.table = el('table',
+	      el('thead',
+	        this.weekdays = new List(Weekday)
 	      ),
-	      this.table = el('table',
-	        el('thead',
-	          this.weekdays = new List(Weekday)
-	        ),
-	        el('tbody',
-	          this.weeks = new List(Week)
-	        )
+	      el('tbody',
+	        this.weeks = new List(Week)
 	      )
-	    );
-	    this.previousMonth.onclick = function () {
-	      this$1.update(this$1.state.year, --this$1.state.month, this$1.state.fixMonday);
-	    };
-	    this.nextMonth.onclick = function () {
-	      this$1.update(this$1.state.year, ++this$1.state.month, this$1.state.fixMonday)
-	    };
+	    )
+	  );
+	  this.previousMonth.onclick = function () {
+	    this$1.update(this$1.state.year, --this$1.state.month, this$1.state.fixMonday);
 	  };
-	  Calendar.prototype.update = function update (year, month, fixMonday) {
-	    var date = new Date(year || new Date().getFullYear(), month || new Date().getMonth());
-
-	    this.state = {
-	      year: date.getFullYear(),
-	      month: date.getMonth(),
-	      fixMonday: fixMonday
-	    };
-
-	    fixMonday ? this.weekdays.update(WEEKDAYS.slice(1).concat(WEEKDAYS[0])) : this.weekdays.update(WEEKDAYS);
-	    this.monthName.textContent = MONTHS[this.state.month];
-	    this.year.textContent = this.state.year;
-	    this.weeks.update(createCalendar(this.state.year, this.state.month, fixMonday));
+	  this.nextMonth.onclick = function () {
+	    this$1.update(this$1.state.year, ++this$1.state.month, this$1.state.fixMonday)
 	  };
+	};
+	Calendar.prototype.update = function update (year, month, fixMonday) {
+	  var date = new Date(year || new Date().getFullYear(), month || new Date().getMonth());
+
+	  this.state = {
+	    year: date.getFullYear(),
+	    month: date.getMonth(),
+	    fixMonday: fixMonday
+	  };
+
+	  fixMonday ? this.weekdays.update(WEEKDAYS.slice(1).concat(WEEKDAYS[0])) : this.weekdays.update(WEEKDAYS);
+	  this.monthName.textContent = MONTHS[this.state.month];
+	  this.year.textContent = this.state.year;
+	  this.weeks.update(createCalendar(this.state.year, this.state.month, fixMonday));
+	};
 
 	var calendar = new Calendar();
 	calendar.update();
