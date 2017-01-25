@@ -2,6 +2,7 @@
   "name": "frzr-calendar",
   "description": "",
   "main": "index.js",
+  "version": "1.0.0",
   "scripts": {
     "dev": "node watch",
     "deploy": "gh-pages -d public",
